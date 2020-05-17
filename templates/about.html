@@ -2,7 +2,13 @@
 {% load static %}
 {% block container %}
     <section>
-        <h1 class="h1 text-center mx-auto mt-4 py-5"><strong>Вакансии для <br>Junior-разработчиков</strong></h1>
-        <img src="{% static "job/specty_testing.png" %}" alt="My image">
+        <h1 class="h3 text-center mx-auto mt-4 py-5"><strong>Вакансии для <br>Junior-разработчиков</strong></h1>
+        <div class="col-12 col-lg-8">
+            <section class="pl-3">
+                <div style="line-height: 1.8;">
+                    {{ text }}
+                </div>
+            </section>
+        </div>
     </section>
 {% endblock %}

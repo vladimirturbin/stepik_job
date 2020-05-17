@@ -64,7 +64,9 @@ class IndexView(View):
 class AboutView(View):
     def get(self, request, *args, **kwargs):
         context = {
-            'title': 'О проекте'
+            'title': 'О проекте',
+            'text': 'Учебный проект курса stepic по Django'
+
         }
 
         # return HttpResponse('Here will be index')
