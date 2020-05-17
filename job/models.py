@@ -34,8 +34,8 @@ class Vacancy(models.Model):
                                 on_delete=models.CASCADE,
                                 related_name='vacancies',
                                 verbose_name='Компания')
-    skills = models.TextField(verbose_name='Навыки'),
+    skills = models.TextField(verbose_name='Навыки', blank=True),
     text = models.TextField(verbose_name='Текст вакансии')
     salary_min = models.IntegerField(verbose_name='Зарплата от')
     salary_max = models.IntegerField(verbose_name='Зарплата до')
-    published_at = models.DateTimeField(verbose_name='Опубликовано')
+    published_at = models.DateField(verbose_name='Опубликовано')

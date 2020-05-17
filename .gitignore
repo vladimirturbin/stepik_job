@@ -1,4 +1,4 @@
 # Project exclude paths
 venv/
 .idea/
-/kushedow_origins/
+kushedow_origins/
