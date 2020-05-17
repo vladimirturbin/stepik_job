@@ -5,36 +5,54 @@ from django.views import View
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        context = {}
+        context = {
+            'title': 'Главная'
+        }
 
-        return HttpResponse('Here will be index')
-        # return render(request, 'index.html', context)
+        # return HttpResponse('Here will be index')
+        return render(request, 'index.html', context)
+
+
+class AboutView(View):
+    def get(self, request, *args, **kwargs):
+        context = {
+            'title': 'О проекте'
+        }
+
+        # return HttpResponse('Here will be index')
+        return render(request, 'about.html', context)
 
 
 class AllVacanciesView(View):
     def get(self, request, *args, **kwargs):
-        context = {}
+        context = {'title': 'Вакансии'}
 
-        return HttpResponse('Here will be all vacancies')
-        # return render(request, 'index.html', context)
+        # return HttpResponse('Here will be all vacancies')
+        return render(request, 'vacancies.html', context)
 
 
 class VacanciesByCategoryView(View):
     def get(self, request, *args, **kwargs):
         context = {}
 
-        return HttpResponse('Here will be vacancies for category '
-                            + kwargs['vacancy_category'])
-        # return render(request, 'index.html', context)
+        return render(request, 'vacancies.html', context)
 
 
 class CompanyView(View):
     def get(self, request, *args, **kwargs):
-        return HttpResponse('Here will be info about company id '
-                            + str(kwargs['company_id']))
+        context = {}
+
+        return render(request, 'company.html', context)
+
+
+class CompaniesView(View):
+    def get(self, request, *args, **kwargs):
+        context = {}
+
+        return render(request, 'companies.html', context)
 
 
 class VacancyView(View):
     def get(self, request, *args, **kwargs):
-        return HttpResponse('Here will be info about vacancy id '
-                            + str(kwargs['vacancy_id']))
+
+        return render(request, 'vacancy.html')
