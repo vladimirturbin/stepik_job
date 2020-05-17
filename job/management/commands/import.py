@@ -12,10 +12,18 @@ class Command(BaseCommand):
         # for i in companies:
         #     Company.objects.create(name=i['title'], employee_count=0)
 
+        # for i in Company.objects.all():
+        #     print(i.id, i.name,i.logo)
+        #     i.logo = f'job/logo{i.id}.png'
+        #     i.save()
+
+
         # for i in specialties:
         #     Speciality.objects.create(code=i['code'], title=i['title'])
+
         # for i in Speciality.objects.all():
         #     print(i.id, i.code, i.title)
+
 
         # for i in jobs:
         #
@@ -29,6 +37,7 @@ class Command(BaseCommand):
         #         published_at=datetime.strptime(i['posted'], '%Y-%m-%d').date()
         #     )
 
-        for i in Vacancy.objects.all():
-            print(i.id, i.title, i.text, i.company, i.specialty,
-                  i.salary_max, i.salary_min, i.published_at)
+        # for i in Vacancy.objects.all():
+        #     print(i.id, i.title, i.text, i.company, i.specialty,
+        #           i.salary_max, i.salary_min, i.published_at)
+        pass
