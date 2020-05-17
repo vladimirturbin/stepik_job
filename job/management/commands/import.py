@@ -39,8 +39,10 @@ class Command(BaseCommand):
         #         salary_max=int(i['salary_to']),
         #         published_at=datetime.strptime(i['posted'], '%Y-%m-%d').date()
         #     )
+        # Vacancy.objects.all().update(skills='123')
 
         # for i in Vacancy.objects.all():
-        #     print(i.id, i.title, i.text, i.company, i.specialty,
-        #           i.salary_max, i.salary_min, i.published_at)
+        #
+        #     i.skills = 'Lorem•ipsum•dolor•sit•amet'
+        #     i.save()
         pass

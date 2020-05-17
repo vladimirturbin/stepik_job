@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import render
 from django.views import View
 from job.models import Company, Vacancy, Speciality
@@ -73,17 +73,47 @@ class AboutView(View):
         return render(request, 'about.html', context)
 
 
-class AllVacanciesView(View):
+class VacanciesView(View):
     def get(self, request, *args, **kwargs):
+        # Опция, показывать ли категории без вакансий на странице вакансий
+        show_enmpty_categories = True
+
         context = {'title': 'Вакансии'}
 
-        # return HttpResponse('Here will be all vacancies')
-        return render(request, 'vacancies.html', context)
+        try:
+            kwargs['vacancy_category']
+        except KeyError:
+            src = Speciality.objects.all()
+        else:
+            try:
+                src = \
+                    [Speciality.objects.get(code=kwargs['vacancy_category'])]
+            except Speciality.DoesNotExist:
+                raise Http404
+
+        specialities = list()
+        for i in src:
+            speciality = {'name': i.title,
+                          'count': i.vacancy_counter_for_href(),
+                          'jobs': list()}
+            for j in i.vacancies.all():
+                job = {'title': j.title,
+                       'id': j.id,
+                       'skills': j.skills,
+                       'published_at': j.published_at,
+                       'salary_min': j.salary_min,
+                       'salary_max': j.salary_max,
+                       'logo': j.company.logo}
+                # if type(j.skills) == type(tuple()):
+                #     job['skills'] = ''
+                speciality['jobs'].append(job)
 
 
-class VacanciesByCategoryView(View):
-    def get(self, request, *args, **kwargs):
-        context = {}
+
+            if i.vacancies.count() != 0 or show_enmpty_categories:
+                specialities.append(speciality)
+
+        context['specialities'] = specialities
 
         return render(request, 'vacancies.html', context)
 
@@ -97,7 +127,14 @@ class CompanyView(View):
 
 class CompaniesView(View):
     def get(self, request, *args, **kwargs):
-        context = {}
+        try:
+            company = Company.objects.get(id=kwargs['company_id'])
+        except KeyError:
+            raise Http404
+        except Company.DoesNotExist:
+            raise Http404
+
+        context = {'name': company.name}
 
         return render(request, 'companies.html', context)
 
