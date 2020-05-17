@@ -120,13 +120,6 @@ class VacanciesView(View):
 
 class CompanyView(View):
     def get(self, request, *args, **kwargs):
-        context = {}
-
-        return render(request, 'company.html', context)
-
-
-class CompaniesView(View):
-    def get(self, request, *args, **kwargs):
         try:
             company = Company.objects.get(id=kwargs['company_id'])
         except KeyError:
@@ -134,7 +127,26 @@ class CompaniesView(View):
         except Company.DoesNotExist:
             raise Http404
 
-        context = {'name': company.name}
+        context = {'name': company.name,
+                   'logo': company.logo,
+                   'counter': company.vacancy_counter_for_href(),
+                   'jobs': list()}
+
+        for i in company.vacancies.all():
+            job = {'title': i.title,
+                   'id': i.id,
+                   'skills': i.skills,
+                   'published_at': i.published_at,
+                   'salary_min': i.salary_min,
+                   'salary_max': i.salary_max,
+                   'logo': i.specialty.picture}
+            context['jobs'].append(job)
+        return render(request, 'company.html', context)
+
+
+class CompaniesView(View):
+    def get(self, request, *args, **kwargs):
+        context = {}
 
         return render(request, 'companies.html', context)
 
