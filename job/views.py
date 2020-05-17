@@ -76,7 +76,7 @@ class AboutView(View):
 class VacanciesView(View):
     def get(self, request, *args, **kwargs):
         # Опция, показывать ли категории без вакансий на странице вакансий
-        show_enmpty_categories = True
+        show_empty_categories = True
 
         context = {'title': 'Вакансии'}
 
@@ -108,9 +108,7 @@ class VacanciesView(View):
                 #     job['skills'] = ''
                 speciality['jobs'].append(job)
 
-
-
-            if i.vacancies.count() != 0 or show_enmpty_categories:
+            if i.vacancies.count() != 0 or show_empty_categories:
                 specialities.append(speciality)
 
         context['specialities'] = specialities
@@ -128,8 +126,10 @@ class CompanyView(View):
             raise Http404
 
         context = {'name': company.name,
+                   'title': 'Компания ' + company.name,
                    'logo': company.logo,
                    'counter': company.vacancy_counter_for_href(),
+                   'back': request.META['HTTP_REFERER'],
                    'jobs': list()}
 
         for i in company.vacancies.all():
@@ -159,7 +159,6 @@ class CompaniesView(View):
                 }
             context['companies'].append(company)
 
-
         return render(request, 'companies.html', context)
 
 
@@ -169,7 +168,7 @@ class VacancyView(View):
             vacancy = Vacancy.objects.get(id=kwargs['vacancy_id'])
         except KeyError:
             raise Http404
-        except Company.DoesNotExist:
+        except Vacancy.DoesNotExist:
             raise Http404
         context = {
             'title': vacancy.title,
@@ -183,6 +182,7 @@ class VacancyView(View):
             'salary_max': vacancy.salary_max,
             'text': vacancy.text,
             'company_id': vacancy.company.id,
+            'back': request.META['HTTP_REFERER'],
 
 
         }
