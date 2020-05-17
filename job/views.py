@@ -146,12 +146,45 @@ class CompanyView(View):
 
 class CompaniesView(View):
     def get(self, request, *args, **kwargs):
-        context = {}
+        context = {'title': 'Компании',
+                   'companies': list()}
+
+        for i in Company.objects.all():
+            company = {
+                'name': i.name,
+                'count': i.vacancy_counter_for_href(),
+                'description': i.description,
+                'logo': i.logo,
+                'id': i.id,
+                }
+            context['companies'].append(company)
+
 
         return render(request, 'companies.html', context)
 
 
 class VacancyView(View):
     def get(self, request, *args, **kwargs):
+        try:
+            vacancy = Vacancy.objects.get(id=kwargs['vacancy_id'])
+        except KeyError:
+            raise Http404
+        except Company.DoesNotExist:
+            raise Http404
+        context = {
+            'title': vacancy.title,
+            'specialty': vacancy.specialty.title,
+            'skills': vacancy.skills,
+            'company': vacancy.company.name,
+            'employee_count': vacancy.company.employee_count,
+            'location': vacancy.company.location,
+            'logo': vacancy.company.logo,
+            'salary_min': vacancy.salary_min,
+            'salary_max': vacancy.salary_max,
+            'text': vacancy.text,
+            'company_id': vacancy.company.id,
 
-        return render(request, 'vacancy.html')
+
+        }
+
+        return render(request, 'vacancy.html', context)
