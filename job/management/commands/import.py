@@ -22,7 +22,10 @@ class Command(BaseCommand):
         #     Speciality.objects.create(code=i['code'], title=i['title'])
 
         # for i in Speciality.objects.all():
-        #     print(i.id, i.code, i.title)
+        #
+        #     i.picture = f'job/specty_{i.code}.png'
+        #     i.save()
+        #     print(i.id, i.code, i.title, i.picture)
 
 
         # for i in jobs:

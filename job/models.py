@@ -1,4 +1,5 @@
 from django.db import models
+from plural_ru import ru
 
 
 class Company(models.Model):
@@ -15,6 +16,10 @@ class Company(models.Model):
         verbose_name='Количество сотрудников'
     )
 
+    def vacancy_counter_for_href(self):
+        t = self.vacancies.count()
+        return str(t) + ' ' + ru(t, ('вакансия', 'вакансии', 'вакансий'))
+
 
 class Speciality(models.Model):
     code = models.CharField(max_length=32, verbose_name='Код')
@@ -22,6 +27,10 @@ class Speciality(models.Model):
     picture = models.CharField(max_length=128,
                                blank=True,
                                verbose_name='Картинка')
+
+    def vacancy_counter_for_href(self):
+        t = self.vacancies.count()
+        return str(t) + ' ' + ru(t, ('вакансия', 'вакансии', 'вакансий'))
 
 
 class Vacancy(models.Model):
