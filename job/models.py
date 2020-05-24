@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from plural_ru import ru
 
@@ -15,6 +16,11 @@ class Company(models.Model):
     employee_count = models.IntegerField(
         verbose_name='Количество сотрудников'
     )
+    owner = models.ForeignKey(User,
+                              on_delete=models.CASCADE,
+                              related_name='Company',
+                              verbose_name='Владелец',
+                              default=1)
 
     def vacancy_counter_for_href(self):
         t = self.vacancies.count()
@@ -50,3 +56,18 @@ class Vacancy(models.Model):
     salary_min = models.IntegerField(verbose_name='Зарплата от')
     salary_max = models.IntegerField(verbose_name='Зарплата до')
     published_at = models.DateField(verbose_name='Опубликовано')
+
+
+class Application(models.Model):
+    written_username = models.CharField(max_length=128, verbose_name='Имя')
+    written_phone = models.CharField(max_length=128, verbose_name='Телефон')
+    written_cover_letter = models.TextField(
+        verbose_name='Сопроводительное письмо')
+    vacancy = models.ForeignKey(Vacancy,
+                                on_delete=models.CASCADE,
+                                related_name='applications',
+                                verbose_name='Вакансия')
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name='applications',
+                             verbose_name='Пользователь')
