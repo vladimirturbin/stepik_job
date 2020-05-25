@@ -68,17 +68,13 @@ class AboutView(View):
             'text': 'Учебный проект курса stepic по Django'
 
         }
-
-        # return HttpResponse('Here will be index')
         return render(request, 'about.html', context)
 
 
 class VacanciesView(View):
     def get(self, request, *args, **kwargs):
         # Опция, показывать ли категории без вакансий на странице вакансий
-        show_empty_categories = True
-
-        context = {'title': 'Вакансии'}
+        show_empty_specialities = True
 
         try:
             kwargs['vacancy_category']
@@ -90,28 +86,16 @@ class VacanciesView(View):
                     [Speciality.objects.get(code=kwargs['vacancy_category'])]
             except Speciality.DoesNotExist:
                 raise Http404
+        # TODO: вместо
+        #         try:
+        #             kwargs['vacancy_category']
+        #         except KeyError
+        #  сделать класс-наследник, который
+        #         будет вызываться без vacancy_category и вызывать этот
 
-        specialities = list()
-        for i in src:
-            speciality = {'name': i.title,
-                          'count': i.vacancy_counter_for_href(),
-                          'jobs': list()}
-            for j in i.vacancies.all():
-                job = {'title': j.title,
-                       'id': j.id,
-                       'skills': j.skills,
-                       'published_at': j.published_at,
-                       'salary_min': j.salary_min,
-                       'salary_max': j.salary_max,
-                       'logo': j.company.logo}
-                # if type(j.skills) == type(tuple()):
-                #     job['skills'] = ''
-                speciality['jobs'].append(job)
-
-            if i.vacancies.count() != 0 or show_empty_categories:
-                specialities.append(speciality)
-
-        context['specialities'] = specialities
+        context = {'title': 'Вакансии',
+                   'specialities': src,
+                   'show_empty_specialities': show_empty_specialities,}
 
         return render(request, 'vacancies.html', context)
 
