@@ -22,12 +22,19 @@ class Company(models.Model):
                               verbose_name='Владелец',
                               default=1)
 
+    class Meta:
+        verbose_name = 'Компания'
+        verbose_name_plural = 'Компании'
+
     def vacancy_counter_for_href(self):
         t = self.vacancies.count()
         return str(t) + ' ' + ru(t, ('вакансия', 'вакансии', 'вакансий'))
 
     def get_absolute_url(self):
         return '/vacancies/' + str(self.id)
+
+    def __str__(self):
+        return 'Компания ' + self.name
 
 
 class Speciality(models.Model):
@@ -63,8 +70,15 @@ class Vacancy(models.Model):
     salary_max = models.IntegerField(verbose_name='Зарплата до')
     published_at = models.DateField(verbose_name='Опубликовано')
 
+    class Meta:
+        verbose_name = 'Вакансия'
+        verbose_name_plural = 'Вакансии'
+
     def get_absolute_url(self):
         return '/vacancies/' + str(self.id)
+
+    def __str__(self):
+        return self.title
 
 
 class Application(models.Model):
@@ -80,3 +94,10 @@ class Application(models.Model):
                              on_delete=models.CASCADE,
                              related_name='applications',
                              verbose_name='Пользователь')
+
+    class Meta:
+        verbose_name = 'Резюме'
+        verbose_name_plural = 'Резюме'
+
+    def __str__(self):
+        return 'Резюме соискателя по имени ' + self.written_username
