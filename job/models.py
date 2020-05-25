@@ -26,9 +26,12 @@ class Company(models.Model):
         t = self.vacancies.count()
         return str(t) + ' ' + ru(t, ('вакансия', 'вакансии', 'вакансий'))
 
+    def get_absolute_url(self):
+        return '/vacancies/' + str(self.id)
+
 
 class Speciality(models.Model):
-    code = models.CharField(max_length=32, verbose_name='Код')
+    code = models.CharField(max_length=32, verbose_name='Код', unique=True)
     title = models.CharField(max_length=128, verbose_name='Название вакансии')
     picture = models.ImageField(max_length=128,
                                 blank=True,
@@ -37,6 +40,9 @@ class Speciality(models.Model):
     def vacancy_counter_for_href(self):
         t = self.vacancies.count()
         return str(t) + ' ' + ru(t, ('вакансия', 'вакансии', 'вакансий'))
+
+    def get_absolute_url(self):
+        return '/vacancies/cat/' + str(self.code)
 
 
 class Vacancy(models.Model):
@@ -56,6 +62,9 @@ class Vacancy(models.Model):
     salary_min = models.IntegerField(verbose_name='Зарплата от')
     salary_max = models.IntegerField(verbose_name='Зарплата до')
     published_at = models.DateField(verbose_name='Опубликовано')
+
+    def get_absolute_url(self):
+        return '/vacancies/' + str(self.id)
 
 
 class Application(models.Model):
