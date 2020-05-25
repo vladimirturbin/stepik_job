@@ -146,19 +146,7 @@ class CompanyView(View):
 
 class CompaniesView(View):
     def get(self, request, *args, **kwargs):
-        context = {'title': 'Компании',
-                   'companies': list()}
-
-        for i in Company.objects.all():
-            company = {
-                'name': i.name,
-                'count': i.vacancy_counter_for_href(),
-                'description': i.description,
-                'logo': i.logo,
-                'id': i.id,
-                }
-            context['companies'].append(company)
-
+        context = {'title': 'Компании', 'companies': Company.objects.all()}
         return render(request, 'companies.html', context)
 
 
