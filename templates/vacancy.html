@@ -9,15 +9,15 @@
         </div>
         <div class="col-12 col-lg-8">
             <section class="pl-3">
-                <a href="/companies/{{ company_id }}"><img src="{% static logo %}" width="130" height="80" alt=""></a>
+                <a href="/companies/{{ vacancy.company.id }}"><img src="{% static vacancy.company.logo %}" width="130" height="80" alt=""></a>
                 <div class="d-flex align-items-baseline align-content-baseline">
-                    <h1 class="h2 mt-4 font-weight-bold" >{{ title }}</h1>
-                    <p class="m-0 pl-3">{{ salary_min }} – {{ salary_max }} Р</p>
+                    <h1 class="h2 mt-4 font-weight-bold" >{{ vacancy.title }}</h1>
+                    <p class="m-0 pl-3">{{ vacancy.salary_min }} – {{ vacancy.salary_max }} Р</p>
                 </div>
-                <p class="mt-2">{{ skills }}</p>
-                <p class="text-muted mb-4">{{ company }} ({{ employee_count }} человек), {{ location }}</p>
+                <p class="mt-2">{{ vacancy.skills }}</p>
+                <p class="text-muted mb-4">{{ vacancy.company.name }} ({{ vacancy.company.employee_count }} человек), {{ vacancy.company.location }}</p>
                 <div style="line-height: 1.8;">
-                    {{ text }}
+                    {{ vacancy.text }}
                 </div>
                 <form action="/echo" class="card mt-4 mb-3">
                     <div class="card-body mx-3">

@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views import View
 from job.models import Company, Vacancy, Speciality
 
@@ -163,28 +163,8 @@ class CompaniesView(View):
 
 
 class VacancyView(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            vacancy = Vacancy.objects.get(id=kwargs['vacancy_id'])
-        except KeyError:
-            raise Http404
-        except Vacancy.DoesNotExist:
-            raise Http404
-        context = {
-            'title': vacancy.title,
-            'specialty': vacancy.specialty.title,
-            'skills': vacancy.skills,
-            'company': vacancy.company.name,
-            'employee_count': vacancy.company.employee_count,
-            'location': vacancy.company.location,
-            'logo': vacancy.company.logo,
-            'salary_min': vacancy.salary_min,
-            'salary_max': vacancy.salary_max,
-            'text': vacancy.text,
-            'company_id': vacancy.company.id,
-            'back': request.META['HTTP_REFERER'],
-
-
-        }
-
+    def get(self, request, vacancy_id, *args, **kwargs):
+        vacancy = get_object_or_404(Vacancy, id=vacancy_id)
+        context = {'vacancy': vacancy, 'back': request.META['HTTP_REFERER']}
+        # TODO: fix bug with null HTTP_REFERER after direct URL address input
         return render(request, 'vacancy.html', context)
