@@ -8,9 +8,9 @@ class Company(models.Model):
                             verbose_name='Название компании')
     location = models.CharField(max_length=128, blank=True,
                                 verbose_name='Город')
-    logo = models.CharField(max_length=128,
-                            blank=True,
-                            verbose_name='Логотипчик')
+    logo = models.ImageField(max_length=128,
+                             blank=True,
+                             verbose_name='Логотипчик')
     description = models.TextField(blank=True,
                                    verbose_name='Информация о компании')
     employee_count = models.IntegerField(
@@ -30,9 +30,9 @@ class Company(models.Model):
 class Speciality(models.Model):
     code = models.CharField(max_length=32, verbose_name='Код')
     title = models.CharField(max_length=128, verbose_name='Название вакансии')
-    picture = models.CharField(max_length=128,
-                               blank=True,
-                               verbose_name='Картинка')
+    picture = models.ImageField(max_length=128,
+                                blank=True,
+                                verbose_name='Картинка')
 
     def vacancy_counter_for_href(self):
         t = self.vacancies.count()

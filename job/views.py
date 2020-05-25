@@ -165,6 +165,8 @@ class CompaniesView(View):
 class VacancyView(View):
     def get(self, request, vacancy_id, *args, **kwargs):
         vacancy = get_object_or_404(Vacancy, id=vacancy_id)
-        context = {'vacancy': vacancy, 'back': request.META['HTTP_REFERER']}
+        context = {'vacancy': vacancy,
+                   # 'back': request.META['HTTP_REFERER']
+                   }
         # TODO: fix bug with null HTTP_REFERER after direct URL address input
         return render(request, 'vacancy.html', context)

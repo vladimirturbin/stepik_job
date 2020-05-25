@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block container %}
     <section>
         <div class="row mt-5">
@@ -15,7 +14,7 @@
 
                             </div>
                             <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
-                                <a href="/companies/{{ company.id }}"><img src="{% static company.logo %}" width="130" height="80" alt=""></a>
+                                <a href="/companies/{{ company.id }}"><img src="{{ company.logo.url }}" width="130" height="80" alt=""></a>
                             </div>
                         </div>
                     </div>
