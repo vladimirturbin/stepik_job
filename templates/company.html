@@ -5,30 +5,30 @@
     </div>
     <section>
         <div class="text-center">
-            <img src="{{ logo.url }}" width="130" height="80" alt="">
+            <img src="{{ company.logo.url }}" width="130" height="80" alt="">
         </div>
-        <h1 class="h1 text-center mx-auto mt-0 pt-1" style="font-size: 70px;"><strong>{{ name }}</strong></h1>
-        <p class="text-center pt-1">Компания, {{ counter }}</p>
+        <h1 class="h1 text-center mx-auto mt-0 pt-1" style="font-size: 70px;"><strong>{{ company.name }}</strong></h1>
+        <p class="text-center pt-1">Компания, {{ company.vacancy_counter_for_href }}</p>
         <div class="row mt-5">
             <div class="col-12 col-lg-8 offset-lg-2 m-auto">
 
-                    {% for job in jobs %}
-                        <div class="card mb-4">
-                            <div class="card-body px-4">
-                                <div class="row">
-                                    <div class="col-12 col-md-8 col-lg-9">
-                                        <h2 class="h2 pb-2">{{ job.title }}</h2>
-                                        <p class="mb-2">{{ job.skills }}</p>
-                                        <p>От {{ job.salary_min }} до {{ job.salary_max }} руб.</p>
-                                        <p class="text-muted pt-1">{{ job.published_at }}</p>
-                                    </div>
-                                    <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
-                                        <a href="/vacancies/{{ job.id }}"><img src="{{ job.logo.url }}" width="130" height="80" alt=""></a>
-                                    </div>
+                {% for job in jobs %}
+                    <div class="card mb-4">
+                        <div class="card-body px-4">
+                            <div class="row">
+                                <div class="col-12 col-md-8 col-lg-9">
+                                    <a href="{{ job.get_absolute_url }}"><h2 class="h2 pb-2">{{ job.title }}</h2></a>
+                                    <p class="mb-2">{{ job.skills }}</p>
+                                    <p>От {{ job.salary_min }} до {{ job.salary_max }} руб.</p>
+                                    <p class="text-muted pt-1">{{ job.published_at }}</p>
+                                </div>
+                                <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
+                                    <a href="{{ job.get_absolute_url }}"><img src="{{ job.specialty.picture.url }}" width="138" height="138" alt=""></a>
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
+                {% endfor %}
 
             </div>
         </div>

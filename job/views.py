@@ -117,30 +117,14 @@ class VacanciesView(View):
 
 
 class CompanyView(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            company = Company.objects.get(id=kwargs['company_id'])
-        except KeyError:
-            raise Http404
-        except Company.DoesNotExist:
-            raise Http404
-
-        context = {'name': company.name,
+    def get(self, request, company_id, *args, **kwargs):
+        company = get_object_or_404(Company, id=company_id)
+        context = {
                    'title': 'Компания ' + company.name,
-                   'logo': company.logo,
-                   'counter': company.vacancy_counter_for_href(),
                    'back': request.META['HTTP_REFERER'],
-                   'jobs': list()}
+                   'company': company,
+                   'jobs': company.vacancies.all()}
 
-        for i in company.vacancies.all():
-            job = {'title': i.title,
-                   'id': i.id,
-                   'skills': i.skills,
-                   'published_at': i.published_at,
-                   'salary_min': i.salary_min,
-                   'salary_max': i.salary_max,
-                   'logo': i.specialty.picture}
-            context['jobs'].append(job)
         return render(request, 'company.html', context)
 
 
