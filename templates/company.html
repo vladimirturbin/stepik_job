@@ -17,7 +17,7 @@
                         <div class="card-body px-4">
                             <div class="row">
                                 <div class="col-12 col-md-8 col-lg-9">
-                                    <a href="{{ job.get_absolute_url }}"><h2 class="h2 pb-2">{{ job.title }}</h2></a>
+                                    <a class="text-dark" href="{{ job.get_absolute_url }}"><h2 class="h2 pb-2">{{ job.title }}</h2></a>
                                     <p class="mb-2">{{ job.skills }}</p>
                                     <p>От {{ job.salary_min }} до {{ job.salary_max }} руб.</p>
                                     <p class="text-muted pt-1">{{ job.published_at }}</p>

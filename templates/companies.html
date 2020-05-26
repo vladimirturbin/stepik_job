@@ -9,12 +9,12 @@
                         <div class="row">
                             <div class="col-12 col-md-8 col-lg-9">
                                 <h2 class="h2 pb-2">{{ company.name }}</h2>
-                                <p class="mb-2">{{ company.vacancy_counter_for_href }}</p>
+                                <p class="mb-2"><a class="text-dark" href="{{ company.get_absolute_url }}">{{ company.vacancy_counter_for_href }}</a></p>
                                 <p>{{ company.description }}</p>
 
                             </div>
                             <div class="col-12 col-md-4 col-lg-3 d-flex align-items-end">
-                                <a href="/companies/{{ company.id }}"><img src="{{ company.logo.url }}" width="130" height="80" alt=""></a>
+                                <a href="{{ company.get_absolute_url }}"><img src="{{ company.logo.url }}" width="130" height="80" alt=""></a>
                             </div>
                         </div>
                     </div>

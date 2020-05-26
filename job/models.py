@@ -31,7 +31,7 @@ class Company(models.Model):
         return str(t) + ' ' + ru(t, ('вакансия', 'вакансии', 'вакансий'))
 
     def get_absolute_url(self):
-        return '/vacancies/' + str(self.id)
+        return '/companies/' + str(self.id)
 
     def __str__(self):
         return 'Компания ' + self.name
