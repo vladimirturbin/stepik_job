@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from job.models import Company, Vacancy, Speciality
 
@@ -126,3 +126,59 @@ class VacancyView(View):
                    }
         # TODO: fix bug with null HTTP_REFERER after direct URL address input
         return render(request, 'vacancy.html', context)
+
+
+class ApplicationSentView(View):
+    def get(self, request, *args, **kwargs):
+
+        context = {}
+
+        return render(request, 'sent.html', context)
+
+
+class MyCompanyView(View):
+    def get(self, request, *args, **kwargs):
+
+        context = {}
+
+        return render(request, 'mycompany.html', context)
+
+
+class MyCompanyVacanciesView(View):
+    def get(self, request, *args, **kwargs):
+
+        context = {}
+
+        return render(request, 'mycompany-vacancies.html', context)
+
+
+class MyCompanyVacancyEditView(View):
+    def get(self, request, vacancy_id, *args, **kwargs):
+
+        context = {}
+
+        return render(request, 'mycompany-vacancy-edit.html', context)
+
+
+class LoginView(View):
+    def get(self, request, *args, **kwargs):
+
+        context = {}
+
+        return render(request, 'login.html', context)
+
+
+class RegisterView(View):
+    def get(self, request, *args, **kwargs):
+
+        context = {}
+
+        return render(request, 'register.html', context)
+
+
+class LogoutView(View):
+    def get(self, request, *args, **kwargs):
+
+        context = {}
+
+        return redirect('/')
