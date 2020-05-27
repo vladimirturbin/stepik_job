@@ -2,7 +2,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 from job.models import Company, Vacancy, Speciality
-
+from job.forms import RegisterForm
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
@@ -170,10 +170,19 @@ class LoginView(View):
 
 class RegisterView(View):
     def get(self, request, *args, **kwargs):
+        form = RegisterForm()
 
-        context = {}
+        return render(request, 'register.html', {'form': form})
 
-        return render(request, 'register.html', context)
+    def post(self, request, *args, **kwargs):
+
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            print('form is valid')
+        else:
+            form = RegisterForm()
+            return render(request, 'register.html', {'form': form})
 
 
 class LogoutView(View):
