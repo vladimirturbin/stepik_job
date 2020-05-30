@@ -1,8 +1,11 @@
+from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
+
 from job.models import Company, Vacancy, Speciality
 from job.forms import RegisterForm
+
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
@@ -179,10 +182,17 @@ class RegisterView(View):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
-            print('form is valid')
-        else:
-            form = RegisterForm()
-            return render(request, 'register.html', {'form': form})
+            if User.objects.filter(username=form.cleaned_data['email']):
+                form.add_error('email',
+                               'Пользователь с таким email уже существует')
+            else:
+                User.objects.create(
+                    username=form.cleaned_data['email'],
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password'],
+                )
+
+        return render(request, 'register.html', {'form': form})
 
 
 class LogoutView(View):
