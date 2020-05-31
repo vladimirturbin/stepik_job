@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -8,7 +10,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 
 from job.models import Application, Company, Vacancy, Speciality
-from job.forms import RegisterForm, ApplicationForm, CompanyForm
+from job.forms import RegisterForm, ApplicationForm, CompanyForm, \
+    VacancyEditForm
 
 
 class IndexView(View):
@@ -260,9 +263,26 @@ class MyCompanyVacanciesView(View):
 class MyCompanyVacancyEditView(View):
     def get(self, request, vacancy_id, *args, **kwargs):
         user = get_user(request)
-        context = {'title': 'Редактирование вакансии', 'user': user}
-
+        if vacancy_id == 0:
+            form = VacancyEditForm()
+        else:
+            form = VacancyEditForm(get_object_or_404(Vacancy, id=vacancy_id))
+        context = {'title': 'Редактирование вакансии',
+                   'user': user,
+                   'form': form}
         return render(request, 'mycompany-vacancy-edit.html', context)
+
+    def post(self, request, vacancy_id, *args, **kwargs):
+        user = get_user(request)
+        form = VacancyEditForm(request.POST)
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.published_at = datetime.now()
+            obj.save()
+        print(form.errors)
+        return render(request, 'mycompany-vacancy-edit.html', {'user': user,
+                                                               'form': form})
 
 
 class MyLoginView(LoginView):

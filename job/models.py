@@ -50,6 +50,9 @@ class Speciality(models.Model):
     def get_absolute_url(self):
         return '/vacancies/cat/' + str(self.code)
 
+    def __str__(self):
+        return self.code + ', ' + self.title
+
 
 class Vacancy(models.Model):
     title = models.CharField(max_length=128, verbose_name='Название вакансии')

@@ -1,3 +1,4 @@
+from datetime import datetime
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Reset, MultiField,\
     Div
@@ -5,7 +6,8 @@ from crispy_forms.bootstrap import PrependedText, AppendedText, FormActions
 from django import forms
 from django.forms import ModelForm
 
-from job.models import Company
+from job.models import Company, Vacancy
+
 
 class RegisterForm(forms.Form):
     email = forms.EmailField()
@@ -77,6 +79,39 @@ class CompanyForm(ModelForm):
                 css_class='row'),
             'description',
             'owner',
+            FormActions(
+                Submit('submit', 'Записать'),
+            )
+        )
+
+
+class VacancyEditForm(ModelForm):
+    class Meta:
+        model = Vacancy
+        fields = ['title', 'specialty', 'company', 'skills', 'text',
+                  'salary_min', 'salary_max', 'published_at']
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+        self.helper.form_class = ''
+        self.helper.label_class = 'mb-1 mt-2'
+        self.helper.field_class = 'form-group'
+
+        self.helper.layout = Layout(
+            Div(
+                Div('title', css_class='col-6'),
+                Div('specialty', css_class='col-6'),
+                css_class='row'),
+            Div(
+                Div('salary_min', css_class='col-6'),
+                Div('salary_max', css_class='col-6'),
+                css_class='row'),
+            'company',
+            'skills',
+            'text',
             FormActions(
                 Submit('submit', 'Записать'),
             )
