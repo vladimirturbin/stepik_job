@@ -7,8 +7,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 
-from job.models import Company, Vacancy, Speciality
-from job.forms import RegisterForm
+from job.models import Application, Company, Vacancy, Speciality
+from job.forms import RegisterForm, ApplicationForm
 
 
 class IndexView(View):
@@ -118,11 +118,14 @@ class CompanyView(View):
         user = get_user(request)
 
         context = {
-                   'title': 'Компания ' + company.name,
-                   'back': request.META['HTTP_REFERER'],
-                   'company': company,
-                   'jobs': company.vacancies.all(),
-                   'user': user,}
+            'title': 'Компания ' + company.name,
+            'back': request.META['HTTP_REFERER'],
+            'company': company,
+            'jobs': company.vacancies.all(),
+            'user': user,
+
+
+        }
         # TODO: fix bug with null HTTP_REFERER after direct URL address input2
         return render(request, 'company.html', context)
 
@@ -140,18 +143,70 @@ class VacancyView(View):
     def get(self, request, vacancy_id, *args, **kwargs):
         vacancy = get_object_or_404(Vacancy, id=vacancy_id)
         user = get_user(request)
+
+        if user.is_authenticated and Application.objects.filter(
+                vacancy_id=vacancy_id,
+                user=user):
+
+            application = Application.objects.filter(
+                vacancy_id=vacancy_id,
+                user=user
+            )[0]
+            initial = {'text': application.written_cover_letter,
+                       'phone': application.written_phone,
+                       'name': application.written_username}
+            form = ApplicationForm(initial=initial)
+        else:
+            form = ApplicationForm()
+
         context = {'vacancy': vacancy,
                    'user': user,
-                   'back': request.META['HTTP_REFERER']
+                   'back': request.META['HTTP_REFERER'],
+                   'form': form
                    }
+
         # TODO: fix bug with null HTTP_REFERER after direct URL address input
         return render(request, 'vacancy.html', context)
 
+    def post(self, request, vacancy_id, *args, **kwargs):
+        vacancy = get_object_or_404(Vacancy, id=vacancy_id)
+        user = get_user(request)
+        if not user.is_authenticated:
+            redirect('/')
+        form = ApplicationForm(request.POST)
+        context = {'vacancy': vacancy,
+                   'user': user,
+                   'back': request.META['HTTP_REFERER'],
+                   'form': form
+                   }
+
+        if form.is_valid():
+            if Application.objects.filter(vacancy_id=vacancy_id, user=user):
+                application = Application.objects.filter(
+                    vacancy_id=vacancy_id, user=user)[0]
+            else:
+                application = Application()
+            application.written_username = form.cleaned_data['name']
+            application.written_phone = form.cleaned_data['phone']
+            application.written_cover_letter = form.cleaned_data['text']
+            application.vacancy = Vacancy.objects.get(id=vacancy_id)
+            application.user = user
+
+            application.save()
+            return redirect(vacancy.get_absolute_url() + '/sent')
+
+        else:
+            return render(request, 'vacancy.html', context)
+
 
 class ApplicationSentView(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, vacancy_id, *args, **kwargs):
         user = get_user(request)
-        context = {'title': 'Отклик отправлен', 'user': user}
+        vacancy = get_object_or_404(Vacancy, id=vacancy_id)
+        context = {'title': 'Отклик отправлен',
+                   'user': user,
+                   'vacancy': vacancy
+                   }
 
         return render(request, 'sent.html', context)
 
