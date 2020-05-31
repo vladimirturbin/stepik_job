@@ -19,8 +19,7 @@ class Company(models.Model):
     owner = models.ForeignKey(User,
                               on_delete=models.CASCADE,
                               related_name='Company',
-                              verbose_name='Владелец',
-                              default=1)
+                              verbose_name='Владелец')
 
     class Meta:
         verbose_name = 'Компания'

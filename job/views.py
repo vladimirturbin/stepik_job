@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
 
 from job.models import Application, Company, Vacancy, Speciality
-from job.forms import RegisterForm, ApplicationForm
+from job.forms import RegisterForm, ApplicationForm, CompanyForm
 
 
 class IndexView(View):
@@ -214,16 +214,46 @@ class ApplicationSentView(View):
 class MyCompanyView(View):
     def get(self, request, *args, **kwargs):
         user = get_user(request)
-        context = {'title': 'моя компания', 'user': user}
+        user_has_company = bool(Company.objects.filter(owner=user))
+        if user_has_company:
+            # Видимо, ошибка здесь? иначе я не знаю, почему редактирование
+            # вылетает с этой странной ошибкой шаблонизатора
+            form = CompanyForm(Company.objects.filter(owner=user))
+        else:
+            form = CompanyForm()
+        yes_create = bool(request.GET.get('yes_create', False))
+        context = {'title': 'моя компания',
+                   'user': user,
+                   'company': user.Company,
+                   'user_has_company': user_has_company,
+                   'yes_create': yes_create,
+                   'form': form,
+                   }
 
+        return render(request, 'mycompany.html', context)
+
+    def post(self, request, *args, **kwargs):
+        user = get_user(request)
+        form = CompanyForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+        user_has_company = bool(Company.objects.filter(owner=user))
+        context = {'title': 'моя компания',
+                   'user': user,
+                   'company': user.Company,
+                   'user_has_company': user_has_company,
+                   'form': form,
+                   }
         return render(request, 'mycompany.html', context)
 
 
 class MyCompanyVacanciesView(View):
     def get(self, request, *args, **kwargs):
         user = get_user(request)
-        context = {'title': 'Вакансии моей компании', 'user': user}
-
+        context = {'title': 'Вакансии моей компании',
+                   'user': user,
+                   'vacancies': Vacancy.objects.filter(company__owner=user)}
         return render(request, 'mycompany-vacancies.html', context)
 
 
@@ -273,5 +303,4 @@ class RegisterView(View):
 
 
 class MyLogoutView(LogoutView):
-
     pass
