@@ -4,15 +4,15 @@ from django.urls import path
 from job.views import AboutView, IndexView, VacanciesView, \
     CompaniesView, CompanyView, VacancyView, ApplicationSentView,\
     MyCompanyView, MyCompanyVacanciesView, MyCompanyVacancyEditView, \
-    LoginView, LogoutView, RegisterView
+    MyLoginView, LogoutView, MySignupView
 
 
 urlpatterns = [
     path('', IndexView.as_view()),
     path('about', AboutView.as_view()),
-    path('login', LoginView.as_view()),
+    path('login', MyLoginView.as_view()),
     path('logout', LogoutView.as_view()),
-    path('register', RegisterView.as_view()),
+    path('register', MySignupView.as_view()),
     path('mycompany', MyCompanyView.as_view()),
     path('mycompany/vacancies', MyCompanyVacanciesView.as_view()),
     path('mycompany/vacancies/<int:vacancy_id>',
