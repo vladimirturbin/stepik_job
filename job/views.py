@@ -219,9 +219,7 @@ class MyCompanyView(View):
         user = get_user(request)
         user_has_company = bool(Company.objects.filter(owner=user))
         if user_has_company:
-            # Видимо, ошибка здесь? иначе я не знаю, почему редактирование
-            # вылетает с этой странной ошибкой шаблонизатора
-            form = CompanyForm(Company.objects.filter(owner=user))
+            form = CompanyForm(instance=get_object_or_404(Company, owner=user))
         else:
             form = CompanyForm()
         yes_create = bool(request.GET.get('yes_create', False))
@@ -266,7 +264,8 @@ class MyCompanyVacancyEditView(View):
         if vacancy_id == 0:
             form = VacancyEditForm()
         else:
-            form = VacancyEditForm(get_object_or_404(Vacancy, id=vacancy_id))
+            form = VacancyEditForm(
+                instance=get_object_or_404(Vacancy, id=vacancy_id))
         context = {'title': 'Редактирование вакансии',
                    'user': user,
                    'form': form}
